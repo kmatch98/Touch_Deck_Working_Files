@@ -78,12 +78,15 @@ class IconWidget(Widget, Control):
         self.append(_label)
         self.touch_boundary = (self.x, self.y, image.width, image.height + _label.bounding_box[3])
 
-    def resize(self, new_width, new_height, position=None):
-        super().resize(new_width, new_height, position)
-        if position:
-            self.touch_boundary = (position[0], position[1], new_width, new_height)
+    def contains(self, touch_point):  # overrides, then calls Control.contains(x,y)
+        """
+        """
+        touch_x = (
+                touch_point[0] - self.x
+        )  # adjust touch position for the local position
+        touch_y = touch_point[1] - self.y
 
-
+        return super().contains((touch_x, touch_y, 0))
 
 ts = adafruit_touchscreen.Touchscreen(
     board.TOUCH_XL,
@@ -111,9 +114,10 @@ _pressed_icons = []
 
 """
 for i in range(12):
-    _new_icon = IconWidget()
-    _labels.append(_new_icon)
+    _new_icon = IconWidget("Shortcut {}".format(i), "images/test32_icon.bmp")
+    _icons.append(_new_icon)
     layout.add_content(_new_icon, grid_position=(i%4, i//4), cell_size=(1, 1))
+
 """
 
 for i, shortcut in enumerate(config_obj["layers"][current_layer]["shortcuts"]):
