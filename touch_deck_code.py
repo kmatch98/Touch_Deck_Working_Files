@@ -8,14 +8,10 @@ import time
 import board
 import displayio
 import terminalio
-from adafruit_display_text import label
+from adafruit_display_text import label, bitmap_label
 from adafruit_displayio_layout.layouts.grid_layout import GridLayout
 import adafruit_imageload
 import adafruit_touchscreen
-
-# use built in display (PyPortal, PyGamer, PyBadge, CLUE, etc.)
-# see guide for  up external displays (TFT / OLED breakouts, RGB matrices, etc.)
-# https://learn.adafruit.com/circuitpython-display-support-using-displayio/display-and-display-bus
 from adafruit_displayio_layout.widgets.control import Control
 from adafruit_displayio_layout.widgets.widget import Widget
 from displayio import Group
@@ -25,6 +21,9 @@ LAST_PRESS_TIME = -1
 
 current_layer = 0
 
+# use built in display (PyPortal, PyGamer, PyBadge, CLUE, etc.)
+# see guide for  up external displays (TFT / OLED breakouts, RGB matrices, etc.)
+# https://learn.adafruit.com/circuitpython-display-support-using-displayio/display-and-display-bus
 display = board.DISPLAY
 
 # Make the display context
@@ -32,9 +31,9 @@ main_group = displayio.Group(max_size=10)
 display.show(main_group)
 
 config_obj = {
-    "layers":[
+    "layers": [
         {
-            "name": "Layer 0",
+            "name": "Media Controls",
             "shortcuts": [
                 {
                     "label": "Play",
@@ -65,6 +64,8 @@ config_obj = {
         }
     ]
 }
+
+
 class IconWidget(Widget, Control):
     def __init__(self, label_text, icon, **kwargs):
         super().__init__(**kwargs)
@@ -97,12 +98,11 @@ ts = adafruit_touchscreen.Touchscreen(
     size=(display.width, display.height),
 )
 
-
 layout = GridLayout(
     x=10,
-    y=10,
+    y=20,
     width=300,
-    height=220,
+    height=210,
     grid_size=(4, 3),
     cell_padding=8,
     max_size=10,
@@ -120,11 +120,21 @@ for i in range(12):
 
 """
 
-for i, shortcut in enumerate(config_obj["layers"][current_layer]["shortcuts"]):
-    _new_icon = IconWidget(shortcut["label"], shortcut["icon"])
-    _icons.append(_new_icon)
-    layout.add_content(_new_icon, grid_position=(i%4, i//4), cell_size=(1, 1))
+layer_label = bitmap_label.Label(terminalio.FONT)
+layer_label.anchor_point = (0.5, 0.0)
+layer_label.anchored_position = (display.width // 2, 4)
+main_group.append(layer_label)
 
+
+def load_layer(layer_index):
+    for i, shortcut in enumerate(config_obj["layers"][layer_index]["shortcuts"]):
+        _new_icon = IconWidget(shortcut["label"], shortcut["icon"])
+        _icons.append(_new_icon)
+        layout.add_content(_new_icon, grid_position=(i % 4, i // 4), cell_size=(1, 1))
+    layer_label.text = config_obj["layers"][layer_index]["name"]
+
+
+load_layer(current_layer)
 main_group.append(layout)
 while True:
     p = ts.touch_point
