@@ -10,18 +10,14 @@ import displayio
 import terminalio
 from adafruit_display_text import label, bitmap_label
 from adafruit_displayio_layout.layouts.grid_layout import GridLayout
-import adafruit_imageload
 import adafruit_touchscreen
-from adafruit_displayio_layout.widgets.control import Control
-from adafruit_displayio_layout.widgets.widget import Widget
-from displayio import Group
 from touch_deck_layers import touch_deck_config, KEY
 import usb_hid
 from adafruit_hid.keyboard import Keyboard
-from adafruit_hid.keycode import Keycode
 from adafruit_hid.consumer_control import ConsumerControl
-from adafruit_hid.consumer_control_code import ConsumerControlCode
 from adafruit_button import Button
+
+from adafruit_displayio_layout.widgets.icon_widget import IconWidget
 
 COOLDOWN_TIME = 0.25
 LAST_PRESS_TIME = -1
@@ -39,31 +35,6 @@ display.show(main_group)
 
 kbd = Keyboard(usb_hid.devices)
 cc = ConsumerControl(usb_hid.devices)
-
-
-class IconWidget(Widget, Control):
-    def __init__(self, label_text, icon, **kwargs):
-        super().__init__(**kwargs)
-        image, palette = adafruit_imageload.load(icon)
-        tile_grid = displayio.TileGrid(image, pixel_shader=palette)
-        self.append(tile_grid)
-        _label = label.Label(
-            terminalio.FONT, scale=1, text=label_text,
-            anchor_point=(0.5, 0), anchored_position=(image.width // 2, image.height)
-        )
-        self.append(_label)
-        self.touch_boundary = (self.x, self.y, image.width, image.height + _label.bounding_box[3])
-
-    def contains(self, touch_point):  # overrides, then calls Control.contains(x,y)
-        """
-        """
-        touch_x = (
-                touch_point[0] - self.x
-        )  # adjust touch position for the local position
-        touch_y = touch_point[1] - self.y
-
-        return super().contains((touch_x, touch_y, 0))
-
 
 ts = adafruit_touchscreen.Touchscreen(
     board.TOUCH_XL,
@@ -139,11 +110,11 @@ def load_layer(layer_index):
     while len(layout) > 0:
         layout.pop()
 
+    layer_label.text = touch_deck_config["layers"][layer_index]["name"]
     for i, shortcut in enumerate(touch_deck_config["layers"][layer_index]["shortcuts"]):
         _new_icon = IconWidget(shortcut["label"], shortcut["icon"])
         _icons.append(_new_icon)
         layout.add_content(_new_icon, grid_position=(i % 4, i // 4), cell_size=(1, 1))
-    layer_label.text = touch_deck_config["layers"][layer_index]["name"]
 
 
 load_layer(current_layer)
