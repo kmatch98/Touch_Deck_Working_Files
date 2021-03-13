@@ -15,6 +15,12 @@ import adafruit_touchscreen
 from adafruit_displayio_layout.widgets.control import Control
 from adafruit_displayio_layout.widgets.widget import Widget
 from displayio import Group
+from touch_deck_layers import touch_deck_config, KEY
+import usb_hid
+from adafruit_hid.keyboard import Keyboard
+from adafruit_hid.keycode import Keycode
+from adafruit_hid.consumer_control import ConsumerControl
+from adafruit_hid.consumer_control_code import ConsumerControlCode
 
 COOLDOWN_TIME = 0.25
 LAST_PRESS_TIME = -1
@@ -30,40 +36,8 @@ display = board.DISPLAY
 main_group = displayio.Group(max_size=10)
 display.show(main_group)
 
-config_obj = {
-    "layers": [
-        {
-            "name": "Media Controls",
-            "shortcuts": [
-                {
-                    "label": "Play",
-                    "icon": "images/test32_icon.bmp",
-                    "actions": ["A"]
-                },
-                {
-                    "label": "Pause",
-                    "icon": "images/test32_icon.bmp",
-                    "actions": ["A"]
-                },
-                {
-                    "label": "FastForward",
-                    "icon": "images/test32_icon.bmp",
-                    "actions": ["A"]
-                },
-                {
-                    "label": "Rewind",
-                    "icon": "images/test32_icon.bmp",
-                    "actions": ["A"]
-                },
-                {
-                    "label": "Stop",
-                    "icon": "images/test32_icon.bmp",
-                    "actions": ["A"]
-                }
-            ]
-        }
-    ]
-}
+kbd = Keyboard(usb_hid.devices)
+cc = ConsumerControl(usb_hid.devices)
 
 
 class IconWidget(Widget, Control):
@@ -88,6 +62,7 @@ class IconWidget(Widget, Control):
         touch_y = touch_point[1] - self.y
 
         return super().contains((touch_x, touch_y, 0))
+
 
 ts = adafruit_touchscreen.Touchscreen(
     board.TOUCH_XL,
@@ -127,11 +102,11 @@ main_group.append(layer_label)
 
 
 def load_layer(layer_index):
-    for i, shortcut in enumerate(config_obj["layers"][layer_index]["shortcuts"]):
+    for i, shortcut in enumerate(touch_deck_config["layers"][layer_index]["shortcuts"]):
         _new_icon = IconWidget(shortcut["label"], shortcut["icon"])
         _icons.append(_new_icon)
         layout.add_content(_new_icon, grid_position=(i % 4, i // 4), cell_size=(1, 1))
-    layer_label.text = config_obj["layers"][layer_index]["name"]
+    layer_label.text = touch_deck_config["layers"][layer_index]["name"]
 
 
 load_layer(current_layer)
@@ -145,6 +120,10 @@ while True:
                 if icon_shortcut.contains(p):
                     if index not in _pressed_icons:
                         print("pressed {}".format(index))
+                        print(touch_deck_config["layers"][current_layer]["shortcuts"][index]["actions"][1])
+                        if touch_deck_config["layers"][current_layer]["shortcuts"][index]["actions"][0] == KEY:
+                            kbd.press(*touch_deck_config["layers"][current_layer]["shortcuts"][index]["actions"][1])
+                            kbd.release_all()
                         LAST_PRESS_TIME = time.monotonic()
                         _pressed_icons.append(index)
                 elif index in _pressed_icons:
