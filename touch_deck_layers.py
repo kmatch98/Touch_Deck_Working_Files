@@ -46,6 +46,31 @@ touch_deck_config = {
                     "label": "Vol +",
                     "icon": "touch_deck_icons/test48_icon.bmp",
                     "actions": (MEDIA, ConsumerControlCode.VOLUME_INCREMENT)
+                },
+                {
+                    "label": "Test (T)",
+                    "icon": "touch_deck_icons/test48_icon.bmp",
+                    "actions": (KEY, [Keycode.T])
+                },
+                {
+                    "label": "Test (E)",
+                    "icon": "touch_deck_icons/test48_icon.bmp",
+                    "actions": (KEY, [Keycode.E])
+                },
+                {
+                    "label": "Test (S)",
+                    "icon": "touch_deck_icons/test48_icon.bmp",
+                    "actions": (KEY, [Keycode.S])
+                },
+                {
+                    "label": "Test (T)",
+                    "icon": "touch_deck_icons/test48_icon.bmp",
+                    "actions": (KEY, [Keycode.T])
+                },
+                {
+                    "label": "Test [:)]",
+                    "icon": "touch_deck_icons/test48_icon.bmp",
+                    "actions": (KEY, [Keycode.RIGHT_SHIFT, Keycode.SEMICOLON, Keycode.ZERO])
                 }
             ]
         }
