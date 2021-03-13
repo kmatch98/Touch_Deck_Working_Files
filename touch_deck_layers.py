@@ -5,7 +5,7 @@ MEDIA = 1
 KEY = 2
 
 touch_deck_config = {
-    "layers": [
+    "layers":[
         {
             "name": "Youtube Controls",
             "shortcuts": [
@@ -93,6 +93,36 @@ touch_deck_config = {
                     "label": "Test (T)",
                     "icon": "touch_deck_icons/test48_icon.bmp",
                     "actions": (KEY, [Keycode.T])
+                },
+                {
+                    "label": "Test [:)]",
+                    "icon": "touch_deck_icons/test48_icon.bmp",
+                    "actions": (KEY, [Keycode.RIGHT_SHIFT, Keycode.SEMICOLON, Keycode.ZERO])
+                }
+            ]
+        },
+        {
+            "name": "Test Third Layer",
+            "shortcuts": [
+                {
+                    "label": "Test (3)",
+                    "icon": "touch_deck_icons/test48_icon.bmp",
+                    "actions": (KEY, [Keycode.THREE])
+                },
+                {
+                    "label": "Test (R)",
+                    "icon": "touch_deck_icons/test48_icon.bmp",
+                    "actions": (KEY, [Keycode.R])
+                },
+                {
+                    "label": "Test (D)",
+                    "icon": "touch_deck_icons/test48_icon.bmp",
+                    "actions": (KEY, [Keycode.D])
+                },
+                {
+                    "label": "Test (L)",
+                    "icon": "touch_deck_icons/test48_icon.bmp",
+                    "actions": (KEY, [Keycode.L])
                 },
                 {
                     "label": "Test [:)]",

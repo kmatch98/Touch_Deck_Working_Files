@@ -40,6 +40,7 @@ display.show(main_group)
 kbd = Keyboard(usb_hid.devices)
 cc = ConsumerControl(usb_hid.devices)
 
+
 class IconWidget(Widget, Control):
     def __init__(self, label_text, icon, **kwargs):
         super().__init__(**kwargs)
@@ -62,6 +63,7 @@ class IconWidget(Widget, Control):
         touch_y = touch_point[1] - self.y
 
         return super().contains((touch_x, touch_y, 0))
+
 
 ts = adafruit_touchscreen.Touchscreen(
     board.TOUCH_XL,
@@ -113,6 +115,20 @@ next_layer_btn = Button(
 
 main_group.append(next_layer_btn)
 
+home_layer_btn = Button(
+    x=layout.x + layout._width - 12,
+    y=0,
+    width=50,
+    height=70,
+    style=Button.RECT,
+    fill_color=0xFF9900,
+    label="",
+    label_font=terminalio.FONT,
+    label_color=0x000000,
+)
+
+main_group.append(home_layer_btn)
+
 
 def load_layer(layer_index):
     # remove everything from self
@@ -144,7 +160,11 @@ while True:
 
                 load_layer(current_layer)
                 LAST_PRESS_TIME = time.monotonic()
-            print(_icons)
+            if home_layer_btn.contains(p):
+                current_layer = 0
+                load_layer(current_layer)
+                LAST_PRESS_TIME = time.monotonic()
+
             for index, icon_shortcut in enumerate(_icons):
                 if icon_shortcut.contains(p):
                     if index not in _pressed_icons:
