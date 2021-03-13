@@ -10,7 +10,7 @@ KEY = 2
 touch_deck_config = {
     "layers": [
         {
-            "name": "Media Controls",
+            "name": "Youtube Controls",
             "shortcuts": [
                 {
                     "label": "Play",
