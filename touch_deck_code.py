@@ -21,6 +21,7 @@ from adafruit_hid.keyboard import Keyboard
 from adafruit_hid.keycode import Keycode
 from adafruit_hid.consumer_control import ConsumerControl
 from adafruit_hid.consumer_control_code import ConsumerControlCode
+from adafruit_button import Button
 
 COOLDOWN_TIME = 0.25
 LAST_PRESS_TIME = -1
@@ -71,14 +72,13 @@ ts = adafruit_touchscreen.Touchscreen(
     size=(display.width, display.height),
 )
 
-
 layout = GridLayout(
-    x=10,
+    x=0,
     y=20,
     width=300,
     height=210,
     grid_size=(4, 3),
-    cell_padding=8,
+    cell_padding=6,
     max_size=10,
 )
 
@@ -96,14 +96,37 @@ for i in range(12):
 
 layer_label = bitmap_label.Label(terminalio.FONT)
 layer_label.anchor_point = (0.5, 0.0)
-layer_label.anchored_position = (display.width//2, 4)
+layer_label.anchored_position = (display.width // 2, 4)
 main_group.append(layer_label)
 
+next_layer_btn = Button(
+    x=layout.x + layout._width - 12,
+    y=display.height - 70,
+    width=50,
+    height=70,
+    style=Button.RECT,
+    fill_color=0x00ff99,
+    label="",
+    label_font=terminalio.FONT,
+    label_color=0x000000,
+)
+
+main_group.append(next_layer_btn)
+
+
 def load_layer(layer_index):
+    # remove everything from self
+    global _icons
+    _icons = []
+    layout._cell_content_list = []
+
+    while len(layout) > 0:
+        layout.pop()
+
     for i, shortcut in enumerate(touch_deck_config["layers"][layer_index]["shortcuts"]):
         _new_icon = IconWidget(shortcut["label"], shortcut["icon"])
         _icons.append(_new_icon)
-        layout.add_content(_new_icon, grid_position=(i%4, i//4), cell_size=(1, 1))
+        layout.add_content(_new_icon, grid_position=(i % 4, i // 4), cell_size=(1, 1))
     layer_label.text = touch_deck_config["layers"][layer_index]["name"]
 
 
@@ -114,6 +137,14 @@ while True:
     if p:
         _now = time.monotonic()
         if _now - LAST_PRESS_TIME > COOLDOWN_TIME:
+            if next_layer_btn.contains(p):
+                current_layer += 1
+                if current_layer >= len(touch_deck_config["layers"]):
+                    current_layer = 0
+
+                load_layer(current_layer)
+                LAST_PRESS_TIME = time.monotonic()
+            print(_icons)
             for index, icon_shortcut in enumerate(_icons):
                 if icon_shortcut.contains(p):
                     if index not in _pressed_icons:
@@ -121,7 +152,7 @@ while True:
                         print(touch_deck_config["layers"][current_layer]["shortcuts"][index]["actions"][1])
                         if touch_deck_config["layers"][current_layer]["shortcuts"][index]["actions"][0] == KEY:
                             kbd.press(*touch_deck_config["layers"][current_layer]["shortcuts"][index]["actions"][1])
-                            kbd.release_all(touch_deck_config["layers"][current_layer]["shortcuts"][index]["actions"][1])
+                            kbd.release_all()
                         else:
                             cc.send(touch_deck_config["layers"][current_layer]["shortcuts"][index]["actions"][1])
                         LAST_PRESS_TIME = time.monotonic()

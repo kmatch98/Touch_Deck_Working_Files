@@ -1,14 +1,11 @@
-import usb_hid
-from adafruit_hid.keyboard import Keyboard
 from adafruit_hid.keycode import Keycode
-from adafruit_hid.consumer_control import ConsumerControl
 from adafruit_hid.consumer_control_code import ConsumerControlCode
 
 MEDIA = 1
 KEY = 2
 
 touch_deck_config = {
-    "layers":[
+    "layers": [
         {
             "name": "Youtube Controls",
             "shortcuts": [
@@ -47,6 +44,36 @@ touch_deck_config = {
                     "icon": "touch_deck_icons/test48_icon.bmp",
                     "actions": (MEDIA, ConsumerControlCode.VOLUME_INCREMENT)
                 },
+                {
+                    "label": "Test (T)",
+                    "icon": "touch_deck_icons/test48_icon.bmp",
+                    "actions": (KEY, [Keycode.T])
+                },
+                {
+                    "label": "Test (E)",
+                    "icon": "touch_deck_icons/test48_icon.bmp",
+                    "actions": (KEY, [Keycode.E])
+                },
+                {
+                    "label": "Test (S)",
+                    "icon": "touch_deck_icons/test48_icon.bmp",
+                    "actions": (KEY, [Keycode.S])
+                },
+                {
+                    "label": "Test (T)",
+                    "icon": "touch_deck_icons/test48_icon.bmp",
+                    "actions": (KEY, [Keycode.T])
+                },
+                {
+                    "label": "Test [:)]",
+                    "icon": "touch_deck_icons/test48_icon.bmp",
+                    "actions": (KEY, [Keycode.RIGHT_SHIFT, Keycode.SEMICOLON, Keycode.ZERO])
+                }
+            ]
+        },
+        {
+            "name": "Test Second Layer",
+            "shortcuts": [
                 {
                     "label": "Test (T)",
                     "icon": "touch_deck_icons/test48_icon.bmp",
