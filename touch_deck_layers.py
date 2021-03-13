@@ -36,6 +36,16 @@ touch_deck_config = {
                     "label": "Next",
                     "icon": "touch_deck_icons/Next_48x48.bmp",
                     "actions": (KEY, [Keycode.RIGHT_SHIFT, Keycode.N])
+                },
+                {
+                    "label": "Vol -",
+                    "icon": "touch_deck_icons/test48_icon.bmp",
+                    "actions": (MEDIA, ConsumerControlCode.VOLUME_DECREMENT)
+                },
+                {
+                    "label": "Vol +",
+                    "icon": "touch_deck_icons/test48_icon.bmp",
+                    "actions": (MEDIA, ConsumerControlCode.VOLUME_INCREMENT)
                 }
             ]
         }

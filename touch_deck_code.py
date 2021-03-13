@@ -39,7 +39,6 @@ display.show(main_group)
 kbd = Keyboard(usb_hid.devices)
 cc = ConsumerControl(usb_hid.devices)
 
-
 class IconWidget(Widget, Control):
     def __init__(self, label_text, icon, **kwargs):
         super().__init__(**kwargs)
@@ -63,7 +62,6 @@ class IconWidget(Widget, Control):
 
         return super().contains((touch_x, touch_y, 0))
 
-
 ts = adafruit_touchscreen.Touchscreen(
     board.TOUCH_XL,
     board.TOUCH_XR,
@@ -72,6 +70,7 @@ ts = adafruit_touchscreen.Touchscreen(
     calibration=((5200, 59000), (5800, 57000)),
     size=(display.width, display.height),
 )
+
 
 layout = GridLayout(
     x=10,
@@ -97,15 +96,14 @@ for i in range(12):
 
 layer_label = bitmap_label.Label(terminalio.FONT)
 layer_label.anchor_point = (0.5, 0.0)
-layer_label.anchored_position = (display.width // 2, 4)
+layer_label.anchored_position = (display.width//2, 4)
 main_group.append(layer_label)
-
 
 def load_layer(layer_index):
     for i, shortcut in enumerate(touch_deck_config["layers"][layer_index]["shortcuts"]):
         _new_icon = IconWidget(shortcut["label"], shortcut["icon"])
         _icons.append(_new_icon)
-        layout.add_content(_new_icon, grid_position=(i % 4, i // 4), cell_size=(1, 1))
+        layout.add_content(_new_icon, grid_position=(i%4, i//4), cell_size=(1, 1))
     layer_label.text = touch_deck_config["layers"][layer_index]["name"]
 
 
@@ -123,7 +121,9 @@ while True:
                         print(touch_deck_config["layers"][current_layer]["shortcuts"][index]["actions"][1])
                         if touch_deck_config["layers"][current_layer]["shortcuts"][index]["actions"][0] == KEY:
                             kbd.press(*touch_deck_config["layers"][current_layer]["shortcuts"][index]["actions"][1])
-                            kbd.release_all()
+                            kbd.release_all(touch_deck_config["layers"][current_layer]["shortcuts"][index]["actions"][1])
+                        else:
+                            cc.send(touch_deck_config["layers"][current_layer]["shortcuts"][index]["actions"][1])
                         LAST_PRESS_TIME = time.monotonic()
                         _pressed_icons.append(index)
                 elif index in _pressed_icons:
