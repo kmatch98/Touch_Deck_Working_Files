@@ -65,8 +65,8 @@ touch_deck_config = {
                     "actions": (KEY, [Keycode.T])
                 },
                 {
-                    "label": "Test [:)]",
-                    "icon": "touch_deck_icons/80px_test_icon.bmp",
+                    "label": "Adafruit",
+                    "icon": "touch_deck_icons/Adafruit_logo_48x48x32.bmp",
                     "actions": (KEY, [Keycode.RIGHT_SHIFT, Keycode.SEMICOLON, Keycode.ZERO])
                 }
             ]

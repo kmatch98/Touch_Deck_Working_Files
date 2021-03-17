@@ -4,6 +4,7 @@
 """
 
 """
+import gc
 import time
 import board
 import displayio
@@ -112,16 +113,26 @@ def load_layer(layer_index):
 
     layer_label.text = touch_deck_config["layers"][layer_index]["name"]
     for i, shortcut in enumerate(touch_deck_config["layers"][layer_index]["shortcuts"]):
-        _new_icon = IconWidget(shortcut["label"], shortcut["icon"])
+        wheel_increment=0
+
+        _new_icon = IconWidget(display,
+                        shortcut["label"],
+                        shortcut["icon"],
+                        on_disk=True,
+                        max_scale=1.4,
+                        animation_time=0.15,
+                        )
         _icons.append(_new_icon)
         layout.add_content(_new_icon, grid_position=(i % 4, i // 4), cell_size=(1, 1))
-
 
 load_layer(current_layer)
 main_group.append(layout)
 while True:
+    time.sleep(0.05)
     p = ts.touch_point
     if p:
+        gc.collect()
+        print("mem_free: {}".format(gc.mem_free()))
         _now = time.monotonic()
         if _now - LAST_PRESS_TIME > COOLDOWN_TIME:
             if next_layer_btn.contains(p):
@@ -140,6 +151,7 @@ while True:
                 if icon_shortcut.contains(p):
                     if index not in _pressed_icons:
                         print("pressed {}".format(index))
+                        icon_shortcut.zoom_animation(p)
                         print(touch_deck_config["layers"][current_layer]["shortcuts"][index]["actions"][1])
                         if touch_deck_config["layers"][current_layer]["shortcuts"][index]["actions"][0] == KEY:
                             kbd.press(*touch_deck_config["layers"][current_layer]["shortcuts"][index]["actions"][1])
@@ -150,3 +162,16 @@ while True:
                         _pressed_icons.append(index)
                 elif index in _pressed_icons:
                     _pressed_icons.remove(index)
+    else:
+        for index in _pressed_icons:
+            _pressed_icons.remove(index)
+            _icons[index].zoom_out_animation(p)
+
+
+
+
+
+
+
+
+
