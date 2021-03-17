@@ -2,8 +2,7 @@
 #
 # SPDX-License-Identifier: Unlicense
 """
-This version runs on the PC for testing interface in a window
-mocked to the same size as the Featherwing.
+
 """
 import displayio
 import terminalio
