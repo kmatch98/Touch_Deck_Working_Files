@@ -42,7 +42,7 @@ display.show(main_group)
 
 layout = GridLayout(
     x=20,
-    y=40,
+    y=20,
     width=420,
     height=290,
     grid_size=(4, 3),
@@ -69,9 +69,9 @@ main_group.append(layer_label)
 
 next_layer_btn = Button(
     x=display.width - 50,
-    y=display.height - 70,
+    y=display.height - 100,
     width=50,
-    height=70,
+    height=100,
     style=Button.RECT,
     fill_color=0x00ff99,
     label="",
@@ -81,11 +81,25 @@ next_layer_btn = Button(
 
 main_group.append(next_layer_btn)
 
+prev_layer_btn = Button(
+    x=display.width - 50,
+    y=110,
+    width=50,
+    height=100,
+    style=Button.RECT,
+    fill_color=0xDD00DD,
+    label="",
+    label_font=terminalio.FONT,
+    label_color=0x000000,
+)
+
+main_group.append(prev_layer_btn)
+
 home_layer_btn = Button(
     x=display.width - 50,
     y=0,
     width=50,
-    height=70,
+    height=100,
     style=Button.RECT,
     fill_color=0xFF9900,
     label="",
@@ -147,6 +161,16 @@ while True:
                             LAST_PRESS_TIME = time.monotonic()
                         if home_layer_btn.contains(p):
                             current_layer = 0
+                            load_layer(current_layer)
+
+                            print("home layer button")
+                            LAST_PRESS_TIME = time.monotonic()
+
+                        if prev_layer_btn.contains(p):
+
+                            current_layer -= 1
+                            if current_layer < 0:
+                                current_layer = len(touch_deck_config["layers"]) - 1
                             load_layer(current_layer)
 
                             print("home layer button")
