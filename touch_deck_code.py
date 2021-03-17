@@ -67,45 +67,36 @@ layer_label.anchor_point = (0.5, 0.0)
 layer_label.anchored_position = (display.width // 2, 4)
 main_group.append(layer_label)
 
-next_layer_btn = Button(
-    x=display.width - 50,
-    y=display.height - 100,
-    width=50,
-    height=100,
-    style=Button.RECT,
-    fill_color=0x00ff99,
-    label="",
-    label_font=terminalio.FONT,
-    label_color=0x000000,
+next_layer_btn = IconWidget(
+    "",
+    "touch_deck_icons/right_arrow.bmp",
+    on_disk=True
 )
+next_layer_btn.x = display.width - 50
+next_layer_btn.y = display.height - 100
+next_layer_btn.resize = (50, 100)
 
 main_group.append(next_layer_btn)
 
-prev_layer_btn = Button(
-    x=display.width - 50,
-    y=110,
-    width=50,
-    height=100,
-    style=Button.RECT,
-    fill_color=0xDD00DD,
-    label="",
-    label_font=terminalio.FONT,
-    label_color=0x000000,
+prev_layer_btn = IconWidget(
+    "",
+    "touch_deck_icons/left_arrow.bmp",
+    on_disk=True
 )
+prev_layer_btn.x = display.width - 50
+prev_layer_btn.y = 110
+prev_layer_btn.resize = (50, 100)
 
 main_group.append(prev_layer_btn)
 
-home_layer_btn = Button(
-    x=display.width - 50,
-    y=0,
-    width=50,
-    height=100,
-    style=Button.RECT,
-    fill_color=0xFF9900,
-    label="",
-    label_font=terminalio.FONT,
-    label_color=0x000000,
+home_layer_btn = IconWidget(
+    "",
+    "touch_deck_icons/home_icon.bmp",
+    on_disk=True
 )
+home_layer_btn.x = display.width - 50
+home_layer_btn.y = 0
+home_layer_btn.resize = (50, 100)
 
 main_group.append(home_layer_btn)
 
