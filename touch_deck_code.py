@@ -2,7 +2,8 @@
 #
 # SPDX-License-Identifier: Unlicense
 """
-
+This version runs on the PC for testing interface in a window
+mocked to the same size as the Featherwing.
 """
 import displayio
 import terminalio
@@ -120,7 +121,7 @@ def load_layer(layer_index):
 
     layer_label.text = touch_deck_config["layers"][layer_index]["name"]
     for i, shortcut in enumerate(touch_deck_config["layers"][layer_index]["shortcuts"]):
-        _new_icon = IconWidget(shortcut["label"], shortcut["icon"])
+        _new_icon = IconWidget(shortcut["label"], shortcut["icon"], on_disk=True)
         _icons.append(_new_icon)
         layout.add_content(_new_icon, grid_position=(i % 4, i // 4), cell_size=(1, 1))
 
